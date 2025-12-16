@@ -1,0 +1,5 @@
+{
+  "name": "PrepGenie AI",
+  "description": "An AI-powered placement preparation platform for service-based companies utilizing Google Gemini to generate dynamic quizzes, coding problems, and personalized analytics.",
+  "requestFramePermissions": []
+}
