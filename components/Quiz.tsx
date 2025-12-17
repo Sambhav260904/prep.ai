@@ -182,7 +182,7 @@ const Quiz: React.FC<QuizProps> = ({ data, onComplete, onExit }) => {
             </h3>
 
             <div className="space-y-3">
-              {currentQuestion.options.map((option, idx) => {
+              {currentQuestion.options?.map((option, idx) => {
                 let btnClass = "w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center group relative overflow-hidden ";
                 
                 if (showExplanation) {

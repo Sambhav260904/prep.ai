@@ -92,7 +92,7 @@ const Results: React.FC<ResultsProps> = ({ result, company, section, onBackToDas
                       <TrendingUp className="w-5 h-5" /> Strengths
                     </h3>
                     <ul className="list-disc list-inside text-sm text-green-700 space-y-1">
-                      {analysis.strengthAreas.map((item, i) => <li key={i}>{item}</li>)}
+                      {analysis.strengthAreas?.map((item, i) => <li key={i}>{item}</li>)}
                     </ul>
                   </div>
                   <div className="bg-orange-50 border border-orange-100 p-5 rounded-xl">
@@ -100,7 +100,7 @@ const Results: React.FC<ResultsProps> = ({ result, company, section, onBackToDas
                       <Target className="w-5 h-5" /> Focus Areas
                     </h3>
                     <ul className="list-disc list-inside text-sm text-orange-700 space-y-1">
-                      {analysis.weakAreas.map((item, i) => <li key={i}>{item}</li>)}
+                      {analysis.weakAreas?.map((item, i) => <li key={i}>{item}</li>)}
                     </ul>
                   </div>
                 </div>
@@ -110,7 +110,7 @@ const Results: React.FC<ResultsProps> = ({ result, company, section, onBackToDas
                       <Lightbulb className="w-5 h-5" /> AI Recommendations
                    </h3>
                    <div className="space-y-3">
-                      {analysis.suggestions.map((sug, i) => (
+                      {analysis.suggestions?.map((sug, i) => (
                         <div key={i} className="flex gap-3 bg-white p-3 rounded-lg border border-indigo-100/50 shadow-sm">
                            <div className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 text-xs font-bold">
                              {i + 1}
@@ -124,7 +124,7 @@ const Results: React.FC<ResultsProps> = ({ result, company, section, onBackToDas
                 <div className="bg-white p-6 rounded-xl border border-slate-200">
                   <h3 className="font-bold text-slate-800 mb-4">Recommended Next Steps</h3>
                   <div className="flex flex-wrap gap-2">
-                    {analysis.nextTopics.map((topic, i) => (
+                    {analysis.nextTopics?.map((topic, i) => (
                       <span key={i} className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg text-sm font-medium border border-slate-200">
                         {topic}
                       </span>

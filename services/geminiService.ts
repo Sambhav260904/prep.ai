@@ -139,6 +139,15 @@ export const generateQuiz = async (company: string, section: string, difficulty:
         const data = JSON.parse(cleanJson(response.text));
         // Strict Validation to prevent undefined[0] errors
         if (data && data.quizMeta && Array.isArray(data.questions) && data.questions.length > 0) {
+           // Post-processing to ensure all questions have options array
+           data.questions.forEach((q: any) => {
+              if (!Array.isArray(q.options)) {
+                q.options = [];
+              }
+              if (!q.explanation) {
+                q.explanation = "No explanation provided.";
+              }
+           });
            return data as QuizData;
         }
         console.warn("Gemini returned invalid quiz structure:", data);
@@ -161,7 +170,7 @@ export const generateCodingProblems = async (company: string, difficulty: string
     Generate 3 UNIQUE coding problems for ${company} with ${difficulty} difficulty.
     These must be based on previous year ${company} question papers.
     
-    For each problem, include a 'solutionCode' in C++ or Python that solves the problem efficiently.
+    For each problem, include a 'solutionCode' in Java that solves the problem efficiently.
     `;
 
     const response = await ai.models.generateContent({
@@ -188,7 +197,7 @@ export const generateCodingProblems = async (company: string, difficulty: string
                   approach: { type: Type.STRING },
                   timeComplexity: { type: Type.STRING },
                   spaceComplexity: { type: Type.STRING },
-                  solutionCode: { type: Type.STRING, description: "Full working solution code in C++ or Python" },
+                  solutionCode: { type: Type.STRING, description: "Full working solution code in Java" },
                 }
               }
             }
@@ -253,10 +262,10 @@ export const analyzePerformance = async (result: QuizResult, company: string, se
           const data = JSON.parse(cleanJson(response.text));
           // Ensure arrays exist to prevent mapping errors
           if (data) {
-              data.strengthAreas = data.strengthAreas || [];
-              data.weakAreas = data.weakAreas || [];
-              data.suggestions = data.suggestions || [];
-              data.nextTopics = data.nextTopics || [];
+              data.strengthAreas = Array.isArray(data.strengthAreas) ? data.strengthAreas : [];
+              data.weakAreas = Array.isArray(data.weakAreas) ? data.weakAreas : [];
+              data.suggestions = Array.isArray(data.suggestions) ? data.suggestions : [];
+              data.nextTopics = Array.isArray(data.nextTopics) ? data.nextTopics : [];
               return data as AnalysisResult;
           }
         } catch(e) {

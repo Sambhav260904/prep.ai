@@ -13,7 +13,7 @@ const CodingArena: React.FC<CodingArenaProps> = ({ problems, onExit }) => {
   
   const problem = problems[currentProblemIndex];
 
-  // Advanced syntax highlighting with shielding
+  // Advanced syntax highlighting with VS Code Dark theme colors tailored for Java
   const highlightCode = (text: string) => {
     if (!text) return '';
 
@@ -23,32 +23,44 @@ const CodingArena: React.FC<CodingArenaProps> = ({ problems, onExit }) => {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 
-    // 2. Shield Strings and Comments (replace with placeholders to prevent keyword matching inside them)
+    // 2. Shield Strings and Comments
     const placeholders: string[] = [];
     const shield = (match: string) => {
         placeholders.push(match);
         return `___PLACEHOLDER_${placeholders.length - 1}___`;
     };
 
-    code = code.replace(/(".*?"|'.*?'|\/\/.*$|#.*$)/gm, shield);
+    // Regex for strings ("...", '...') and comments (//..., /*...*/)
+    code = code.replace(/(".*?"|'.*?'|\/\/.*$|\/\*[\s\S]*?\*\/)/gm, shield);
 
-    // 3. Highlight Keywords, Types, and Numbers
-    const keywords = /\b(class|struct|public|private|protected|static|const|virtual|override|new|delete|using|namespace|include|import|from|as|try|except|finally|raise|with|def|return|if|else|elif|for|while|do|switch|case|break|continue|void|int|float|double|bool|char|auto|template|typename|std)\b/g;
-    const builtins = /\b(vector|string|iostream|cout|cin|endl|print|input|len|range|list|dict|set|map|main|args|self|this|super)\b/g;
-    const numbers = /\b(\d+)\b/g;
-    const functions = /\b([a-zA-Z_]\w*)(?=\()/g;
+    // 3. Highlight Logic
 
-    code = code
-        .replace(functions, '<span class="text-blue-300">$1</span>')
-        .replace(keywords, '<span class="text-purple-400 font-bold">$1</span>')
-        .replace(builtins, '<span class="text-yellow-300">$1</span>')
-        .replace(numbers, '<span class="text-orange-300">$1</span>');
+    // Annotations: Teal
+    code = code.replace(/(@\w+)/g, '<span class="text-[#4ec9b0]">$1</span>');
 
-    // 4. Restore shielded content with correct colors
+    // Functions: Word followed by ( -> Yellow
+    code = code.replace(/\b([a-zA-Z_]\w*)(?=\()/g, '<span class="text-[#dcdcaa]">$1</span>');
+
+    // Keywords: Purple
+    const keywords = /\b(public|private|protected|class|interface|enum|extends|implements|static|final|abstract|try|catch|finally|throw|throws|if|else|switch|case|default|break|continue|return|for|while|do|package|import|synchronized|volatile|transient|native|strictfp|assert)\b/g;
+    code = code.replace(keywords, '<span class="text-[#c586c0]">$1</span>');
+
+    // Primitives / Special / Types: Blue
+    const primitives = /\b(void|int|boolean|char|byte|short|long|float|double|new|this|super|instanceof|true|false|null|var|const)\b/g;
+    code = code.replace(primitives, '<span class="text-[#569cd6]">$1</span>');
+
+    // Classes (Heuristic: Starts with Uppercase): Teal
+    code = code.replace(/\b([A-Z]\w*)\b/g, '<span class="text-[#4ec9b0]">$1</span>');
+
+    // Numbers: Light Green
+    code = code.replace(/\b(\d+)\b/g, '<span class="text-[#b5cea8]">$1</span>');
+
+    // 4. Restore shielded content
     code = code.replace(/___PLACEHOLDER_(\d+)___/g, (_, index) => {
         const original = placeholders[Number(index)];
-        const isComment = original.startsWith('//') || original.startsWith('#');
-        const color = isComment ? 'text-slate-500 italic' : 'text-emerald-400';
+        const isComment = original.startsWith('//') || original.startsWith('/*');
+        // Green for comments, Orange/Brown for strings
+        const color = isComment ? 'text-[#6a9955]' : 'text-[#ce9178]';
         return `<span class="${color}">${original}</span>`;
     });
 
@@ -64,7 +76,7 @@ const CodingArena: React.FC<CodingArenaProps> = ({ problems, onExit }) => {
   return (
     <div className="flex flex-col lg:flex-row h-auto lg:h-[calc(100vh-100px)] gap-6 px-4 pb-8 lg:pb-0 min-h-screen lg:min-h-0">
       {/* LEFT: Problem Statement */}
-      <div className="w-full lg:w-1/2 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden shrink-0 h-auto lg:h-full">
+      <div className="w-full lg:w-1/2 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden shrink-0 h-auto lg:h-full order-1">
         {/* Header with Nav */}
         <div className="p-5 border-b border-slate-100 bg-slate-50 flex flex-col gap-4 sticky top-0 z-10 lg:static">
              <div className="flex justify-between items-center">
@@ -116,14 +128,14 @@ const CodingArena: React.FC<CodingArenaProps> = ({ problems, onExit }) => {
 
              <div>
                 <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3">Sample Test Cases</h4>
-                <div className="bg-[#1e1e1e] rounded-xl p-5 font-mono text-sm shadow-md overflow-x-auto">
+                <div className="bg-[#1e1e1e] rounded-xl p-5 font-mono text-sm shadow-md overflow-x-auto text-[#d4d4d4]">
                     <div className="mb-4 pb-4 border-b border-white/10">
                         <span className="text-slate-400 text-xs block mb-1.5 uppercase tracking-wide">Input</span>
-                        <div className="text-white bg-black/30 p-2 rounded whitespace-pre-wrap">{problem.sampleInput}</div>
+                        <div className="bg-black/30 p-2 rounded whitespace-pre-wrap">{problem.sampleInput}</div>
                     </div>
                     <div>
                         <span className="text-slate-400 text-xs block mb-1.5 uppercase tracking-wide">Output</span>
-                        <div className="text-emerald-400 bg-black/30 p-2 rounded whitespace-pre-wrap">{problem.sampleOutput}</div>
+                        <div className="text-[#b5cea8] bg-black/30 p-2 rounded whitespace-pre-wrap">{problem.sampleOutput}</div>
                     </div>
                 </div>
              </div>
@@ -142,7 +154,7 @@ const CodingArena: React.FC<CodingArenaProps> = ({ problems, onExit }) => {
       </div>
 
       {/* RIGHT: Solution Viewer */}
-      <div className="w-full lg:w-1/2 flex flex-col h-auto lg:h-full space-y-4 shrink-0">
+      <div className="w-full lg:w-1/2 flex flex-col h-auto lg:h-full space-y-4 shrink-0 order-2">
            {/* Approach Card */}
            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 shrink-0">
                <h3 className="flex items-center gap-2 font-bold text-slate-800 mb-3 text-lg">
@@ -162,28 +174,42 @@ const CodingArena: React.FC<CodingArenaProps> = ({ problems, onExit }) => {
                </div>
            </div>
 
-           {/* Code Card - Scrollable internally */}
-           <div className="flex-1 bg-[#1e1e1e] rounded-2xl shadow-lg border border-slate-700 overflow-hidden flex flex-col min-h-[400px] lg:min-h-0">
-                <div className="flex items-center justify-between p-3 border-b border-white/10 bg-white/5">
+           {/* Code Card */}
+           <div className="flex-1 bg-[#1e1e1e] rounded-2xl shadow-xl border border-slate-700 overflow-hidden flex flex-col lg:min-h-0 min-h-[400px]">
+                {/* Window Controls Header */}
+                <div className="flex items-center justify-between p-3 border-b border-[#333] bg-[#252526]">
                     <div className="flex items-center gap-2 px-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
-                        <span className="ml-3 text-xs font-mono text-slate-400 font-medium">Solution Code</span>
+                        <div className="flex gap-1.5 group">
+                            <div className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]"></div>
+                            <div className="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]"></div>
+                            <div className="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]"></div>
+                        </div>
+                        <span className="ml-4 text-xs font-mono text-slate-400 font-medium opacity-80">Solution.java</span>
                     </div>
                     <button 
                         onClick={handleCopy}
-                        className="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-2 text-xs font-medium"
+                        className="text-slate-400 hover:text-white p-1.5 rounded hover:bg-white/10 transition-colors flex items-center gap-2 text-xs font-medium"
                         title="Copy Code"
                     >
                         {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
                         {copied ? <span className="text-green-400">Copied</span> : 'Copy'}
                     </button>
                 </div>
-                <div className="flex-1 overflow-auto custom-scrollbar p-5 bg-[#1e1e1e]">
-                    <pre className="font-mono text-sm text-slate-300 leading-relaxed tab-4">
-                        <code dangerouslySetInnerHTML={{ __html: highlightCode(problem.solutionCode) }} />
-                    </pre>
+                
+                {/* Code Editor Area */}
+                <div className="flex-1 overflow-auto custom-scrollbar bg-[#1e1e1e] flex text-sm font-mono leading-relaxed relative">
+                    {/* Line Numbers */}
+                    <div className="py-4 pl-3 pr-4 text-right text-[#858585] select-none bg-[#1e1e1e] sticky left-0 min-w-[3.5rem] border-r border-[#333]/50 z-10">
+                        {problem.solutionCode.split('\n').map((_, i) => (
+                            <div key={i} className="leading-relaxed">{i + 1}</div>
+                        ))}
+                    </div>
+                    {/* Code Content */}
+                    <div className="p-4 w-full">
+                         <pre className="m-0 bg-transparent text-[#d4d4d4]" style={{ tabSize: 4, fontFamily: "Consolas, Monaco, 'Courier New', monospace" }}>
+                             <code dangerouslySetInnerHTML={{ __html: highlightCode(problem.solutionCode) }} />
+                         </pre>
+                    </div>
                 </div>
            </div>
       </div>
