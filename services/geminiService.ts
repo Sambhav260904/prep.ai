@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { QuizData, CodingProblem, AnalysisResult, QuizResult } from "../types";
 
-const apiKey = process.env.API_KEY || '';
+const apiKey = import.meta.env.VITE_API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
 
 // Helper to clean Markdown code blocks from JSON response

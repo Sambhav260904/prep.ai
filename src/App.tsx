@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ViewState, UserProfile, QuizData, CodingProblem, QuizResult } from './types';
-import { generateQuiz, generateCodingProblems } from './services/geminiService';
-import Layout from './components/Layout';
-import Dashboard from './components/Dashboard';
-import Quiz from './components/Quiz';
-import CodingArena from './components/CodingArena';
-import Results from './components/Results';
+import { ViewState, UserProfile, QuizData, CodingProblem, QuizResult } from '../types';
+import { generateQuiz, generateCodingProblems } from '../services/geminiService';
+import Layout from '../components/Layout';
+import Dashboard from '../components/Dashboard';
+import Quiz from '../components/Quiz';
+import CodingArena from '../components/CodingArena';
+import Results from '../components/Results';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('LANDING');
