@@ -16,7 +16,7 @@ You are an expert AI system designed to power an AI-based Placement Preparation 
 Your objective is to generate pattern-based, exam-oriented content.
 Target Audience: Final-year Engineering students, Fresher job seekers.
 Tone: Professional, Encouraging, Educational.
-Constraints: No copyrighted material, no hallucinations.
+Note: Questions must be strictly based on previous year based pattern 2018 - present (2026)
 `;
 
 const getCompanySyllabus = (company: string, section: string): string => {
