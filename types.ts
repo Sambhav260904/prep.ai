@@ -2,8 +2,15 @@ export type ViewState = 'LANDING' | 'DASHBOARD' | 'QUIZ_SETUP' | 'QUIZ_ACTIVE' |
 
 export interface UserProfile {
   name: string;
+  email: string;
   college: string;
   targetRole: string;
+  token?: string;
+  stats: {
+    solved: number;
+    streak: number;
+    accuracy: number;
+  }
 }
 
 export interface Company {
@@ -11,6 +18,7 @@ export interface Company {
   name: string;
   color: string;
   logo: string;
+  category: string;
 }
 
 export type QuestionType = 'APTITUDE' | 'LOGICAL' | 'VERBAL' | 'CODING';

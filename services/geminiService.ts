@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { QuizData, CodingProblem, AnalysisResult, QuizResult } from "../types";
 
-const apiKey = import.meta.env.VITE_API_KEY || '';
+const apiKey = process.env.API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
 
 // Helper to clean Markdown code blocks from JSON response
@@ -16,6 +16,7 @@ You are an expert AI system designed to power an AI-based Placement Preparation 
 Your objective is to generate pattern-based, exam-oriented content.
 Target Audience: Final-year Engineering students, Fresher job seekers.
 Tone: Professional, Encouraging, Educational.
+Constraints: No copyrighted material, no hallucinations.
 `;
 
 const getCompanySyllabus = (company: string, section: string): string => {
